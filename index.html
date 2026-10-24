@@ -1,0 +1,674 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Orangerie N°7</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Demo boutique landing for a fictional perfume house: Figue Rose eau de parfum, hand-drawn bottle, GSAP and Motion Prompt animations.">
+<meta name="theme-color" content="#f6e7e3">
+<meta property="og:title" content="Orangerie N°7 — Figue Rose">
+<meta property="og:description" content="A garden, embroidered in fig and silk. Demo boutique landing by Matvei Kutafin.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Tenor+Sans&display=swap">
+<style>
+/* Layout: a light boutique. Lots of air, a centred wordmark, a bottle on a travertine podium inside a gold ring, silk behind it, and an embroidered "Atelier" band in crimson. */
+:root{
+  --powder:#f6e7e3; --ivory:#fbf6f2; --rose:#e9a8b6; --crimson:#7a1027; --gold:#b8914e; --ink:#2b0b14; --mute:rgba(43,11,20,.62);
+  --f-mark:'Cinzel', 'Trajan Pro', Georgia, serif;
+  --f-display:'Cormorant Garamond', 'Garamond', Georgia, serif;
+  --f-body:'Tenor Sans', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--powder);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:80;background:var(--powder)}
+img{display:block;max-width:100%}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:1px solid var(--crimson);outline-offset:4px}
+.label{font-family:var(--f-body);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--crimson)}
+h1,h2,h3{font-family:var(--f-display);font-weight:300;margin:0;text-wrap:balance;letter-spacing:-.005em}
+h2{font-size:clamp(42px,5.2vw,78px);line-height:1}
+em{font-style:italic;font-weight:300}
+.split-line{overflow:hidden;padding-bottom:.06em}
+
+#grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:90;opacity:.09;mix-blend-mode:multiply}
+
+#pre{position:fixed;inset:0;z-index:100;background:var(--ivory);display:grid;place-items:center;align-content:center;gap:18px}
+#pre .b{font-family:var(--f-mark);font-size:clamp(30px,5vw,54px);letter-spacing:.32em;padding-left:.32em}
+#pre .n{font-family:var(--f-display);font-style:italic;color:var(--crimson);font-size:24px;text-align:center}
+#pre .bar{width:180px;height:1px;background:rgba(184,145,78,.3)}
+#pre .bar i{display:block;height:100%;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:left}
+#pre .pct{font-size:11px;letter-spacing:.3em;color:var(--mute);text-align:center;font-variant-numeric:tabular-nums}
+
+#cur{position:fixed;left:0;top:0;width:30px;height:30px;margin:-15px 0 0 -15px;border:1px solid var(--crimson);border-radius:50%;pointer-events:none;z-index:95;opacity:0;transition:width .35s var(--ease),height .35s var(--ease),margin .35s var(--ease),background-color .35s}
+#cur.big{width:72px;height:72px;margin:-36px 0 0 -36px;background:rgba(122,16,39,.08)}
+@media (hover:none){#cur{display:none}}
+
+/* Header: wordmark in the centre, like a boutique */
+header{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:70;transition:background-color .4s,box-shadow .4s}
+header.solid{background:rgba(251,246,242,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(43,11,20,.08)}
+header .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding-block:22px}
+.brand{font-family:var(--f-mark);font-size:22px;letter-spacing:.34em;padding-left:.34em;text-decoration:none;color:var(--ink)}
+header nav{display:flex;gap:30px;font-size:11px;letter-spacing:.24em;text-transform:uppercase}
+a.ln{color:var(--ink);text-decoration:none;position:relative}
+.ln::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
+.ln:hover::after{transform:scaleX(1);transform-origin:left}
+.right{justify-self:end}
+.cart{position:relative;background:none;border:0;color:var(--ink);font:11px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;cursor:pointer;padding:8px 2px}
+.badge{position:absolute;right:-18px;top:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--crimson);color:var(--ivory);font:10px/18px var(--f-body);text-align:center;letter-spacing:0;transform:scale(0)}
+.burger{display:none;position:relative;width:40px;height:40px;border:0;background:none;cursor:pointer;padding:0}
+.burger i{position:absolute;left:8px;width:24px;height:1.5px;background:var(--ink);transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .3s,top .3s cubic-bezier(.65,0,.35,1)}
+.burger i:nth-child(1){top:12px}.burger i:nth-child(2){top:20px}.burger i:nth-child(3){top:28px}
+.burger[aria-expanded="true"] i:nth-child(1){top:20px;transform:rotate(45deg);background:var(--crimson)}
+.burger[aria-expanded="true"] i:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] i:nth-child(3){top:20px;transform:rotate(-45deg);background:var(--crimson)}
+.mmenu{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 76px);z-index:69;background:rgba(251,246,242,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:grid;gap:4px;padding:18px max(16px,env(safe-area-inset-left,0px)) 30px;box-shadow:0 16px 30px -18px rgba(43,11,20,.4);clip-path:inset(0 0 100% 0)}
+.mmenu[hidden]{display:none}
+.mmenu a{font-family:var(--f-display);font-size:34px;font-weight:300;color:var(--ink);text-decoration:none;padding:6px 0;border-bottom:1px solid rgba(43,11,20,.08)}
+header nav a.active{color:var(--crimson)}header nav a.active::after{transform:scaleX(1)}
+@media (max-width:820px){header nav{display:none}.burger{display:block}header .wrap{grid-template-columns:auto 1fr auto}.brand{font-size:18px;justify-self:center}}
+@media (min-width:821px){.mmenu{display:none!important}}
+
+/* Buttons */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;height:56px;padding:0 38px;border-radius:999px;border:0;cursor:pointer;font:12px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;text-decoration:none;overflow:hidden;isolation:isolate;transition:transform .6s var(--ease),box-shadow .6s var(--ease)}
+.btn.solid{color:var(--ivory);background:linear-gradient(180deg,#8f1631,#6a0c21);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 14px 30px -16px rgba(122,16,39,.9)}
+.btn.solid:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 22px 44px -18px rgba(122,16,39,1)}
+.btn.ghost{color:var(--ink);background:rgba(255,255,255,.4);box-shadow:inset 0 0 0 1px rgba(43,11,20,.25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--crimson)}
+.btn:active{transform:scale(.97)}
+.btn .sheen{position:absolute;top:-30%;bottom:-30%;left:0;width:80px;transform:translateX(-160px) rotate(24deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);z-index:-1;pointer-events:none}
+.btn:hover .sheen{transition:transform 1.05s cubic-bezier(.45,0,.55,1);transform:translateX(440px) rotate(24deg)}
+.roll{display:inline-block;height:1.15em;overflow:hidden;line-height:1.15em}
+.roll .w{display:block;position:relative}
+.roll .ch{display:inline-block;transition:transform .36s cubic-bezier(.65,0,.35,1);transition-delay:calc(var(--i)*35ms)}
+.roll .w2{position:absolute;left:0;top:100%}
+.btn:hover .roll .ch{transform:translateY(-100%)}
+.magnet{display:inline-block}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;padding-top:calc(110px + env(safe-area-inset-top,0px));padding-bottom:60px;background:radial-gradient(60% 70% at 70% 45%,#fbeff0 0%,transparent 70%),radial-gradient(40% 50% at 10% 90%,rgba(233,168,182,.35),transparent 70%),var(--powder)}
+.hero .grid{position:relative;display:grid;grid-template-columns:1fr 1.15fr;gap:24px;align-items:center;min-height:calc(100vh - 170px)}
+.hero h1{font-size:clamp(52px,6.6vw,104px);line-height:.98;margin:22px 0 26px}
+.hero h1 em{color:var(--crimson)}
+.rule{display:block;height:1px;width:110px;background:var(--gold);margin:0 0 26px;transform-origin:left}
+.hero p.sub{font-size:17px;color:var(--mute);max-width:34ch;margin:0 0 38px}
+.acts{display:flex;gap:14px;flex-wrap:wrap}
+.stage{position:relative;height:min(78vh,720px);min-height:560px}
+.ctr{position:absolute;left:0;right:0;margin-left:auto;margin-right:auto}
+.arch-win{top:0;width:min(400px,72%);height:76%;border-radius:220px 220px 0 0;overflow:hidden;box-shadow:0 0 0 1px rgba(184,145,78,.5),0 0 0 10px rgba(251,246,242,.6),0 0 0 11px rgba(184,145,78,.35)}
+.arch-win img{width:100%;height:115%;object-fit:cover;object-position:50% 30%}
+.arch-win::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(246,231,227,0) 40%,rgba(246,231,227,.55) 100%)}
+.ring{top:15%;width:min(470px,86%);aspect-ratio:1;border-radius:50%;border:2px solid transparent;background:linear-gradient(135deg,#f3d58c,#a77b2c 40%,#f6dea0 60%,#8a6420) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0)}
+#silk{position:absolute;left:-20%;top:12%;width:140%;height:70%;pointer-events:none;opacity:.9}
+.podium{bottom:4%;width:min(380px,78%)}
+.podium svg{width:100%;height:auto;display:block}
+.halo{bottom:6%;width:min(460px,88%);aspect-ratio:1;border-radius:50%;background:radial-gradient(closest-side,rgba(255,246,240,.92),rgba(255,228,230,.5) 45%,rgba(255,228,230,0) 72%);z-index:1;pointer-events:none}
+.caustic{bottom:calc(4% + 30px);width:min(240px,46%);height:46px;border-radius:50%;background:radial-gradient(closest-side,rgba(239,140,165,.65),rgba(239,163,180,.25) 55%,transparent);z-index:1;filter:blur(2px)}
+.contact{bottom:calc(4% + 36px);width:min(170px,32%);height:14px;border-radius:50%;background:radial-gradient(closest-side,rgba(70,15,30,.45),transparent);z-index:1}
+.hero-btl{bottom:calc(4% + 40px);width:min(250px,46%);z-index:2}
+.hero-btl svg{width:100%;height:auto;display:block;filter:drop-shadow(0 26px 22px rgba(90,20,40,.22))}
+#petals{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.stage .tag{position:absolute;font-family:var(--f-display);font-style:italic;font-size:24px;color:var(--ink);white-space:nowrap;z-index:4}
+.stage .tag small{display:block;font:10px/1.4 var(--f-body);font-style:normal;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+.tag.t1{left:0;top:30%}.tag.t2{right:0;top:58%;text-align:right}
+.cue{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);font-size:10px;letter-spacing:.32em;color:var(--mute);text-transform:uppercase;display:grid;justify-items:center;gap:10px}
+.cue i{display:block;width:1px;height:40px;background:linear-gradient(var(--crimson),transparent);transform-origin:top}
+@media (max-width:900px){.hero .grid{grid-template-columns:1fr;min-height:0}.stage{order:-1;height:520px;min-height:0}.cue,.stage .tag{display:none}}
+
+/* Services band in crimson (boutique services) */
+.services{background:var(--crimson);color:var(--ivory);padding-block:56px}
+.services .row{display:grid;grid-template-columns:repeat(4,1fr)}
+.svc{display:grid;justify-items:center;text-align:center;gap:14px;padding:6px 20px}
+.svc+.svc{border-left:1px solid rgba(230,194,127,.28)}
+.svc svg{width:42px;height:42px;fill:none;stroke:#e6c27f;stroke-width:1;stroke-linecap:round;stroke-linejoin:round}
+.svc h3{font-size:24px;font-style:italic;font-weight:300;line-height:1.15}
+.svc p{margin:0;font-size:13px;color:rgba(251,246,242,.72);max-width:24ch}
+@media (max-width:900px){.services .row{grid-template-columns:1fr 1fr;row-gap:36px}.svc:nth-child(3){border-left:0}}
+@media (max-width:480px){.services .row{grid-template-columns:1fr}.svc+.svc{border-left:0;border-top:1px solid rgba(230,194,127,.28);padding-top:30px}}
+
+/* Atelier zoom */
+.zoom{position:relative;height:100vh;overflow:hidden;background:var(--ivory)}
+.zoom img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.zoom .clip{position:absolute;inset:0;clip-path:inset(26% 38% 10% 38% round 260px 260px 4px 4px)}
+.zoom .side{position:absolute;font-family:var(--f-display);font-weight:300;font-size:clamp(30px,3.8vw,56px);line-height:1.04;max-width:9ch;margin:0}
+.zoom .side em{color:var(--crimson)}
+.zoom .l{left:max(16px,6vw);top:28%}
+.zoom .r{right:max(16px,6vw);bottom:16%;text-align:right}
+.zoom .lb{position:absolute;left:0;right:0;text-align:center;top:16%}
+.zoom .over{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--ivory);background:radial-gradient(55% 55% at 50% 50%,rgba(60,4,16,.72),rgba(60,4,16,.25));opacity:0;padding:16px}
+.zoom .over h2{font-size:clamp(46px,6.4vw,96px)}
+.zoom .over p{max-width:40ch;margin:18px auto 0;color:rgba(251,246,242,.85)}
+.zoom .over .label{color:#e6c27f}
+@media (max-width:700px){.zoom .side{display:none}.zoom .clip{clip-path:inset(24% 16% 16% 16% round 160px 160px 4px 4px)}}
+
+/* Collection: boutique product grid on a horizontal rail */
+.coll{position:relative;overflow:hidden;background:var(--ivory)}
+.coll .inner{min-height:100vh;display:flex;flex-direction:column;justify-content:center;gap:42px;padding-block:80px}
+.coll .head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.rail{display:flex;gap:22px;padding-left:max(16px,calc((100vw - 1320px)/2 + 16px));padding-right:8vw;width:max-content;perspective:1000px}
+.card{flex:none;width:min(340px,80vw);transform-style:preserve-3d;transition:transform .5s var(--ease)}
+.card .ph{position:relative;height:440px;border-radius:4px;overflow:hidden;background:var(--tint,#f3e8e4);display:grid;place-items:end center;padding-bottom:34px}
+.card .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.08);transition:opacity .8s var(--ease),transform 1.4s var(--ease)}
+.card:hover .ph img{opacity:1;transform:scale(1)}
+.card .ph .mini{position:relative;width:150px;z-index:1;transition:transform .8s var(--ease)}
+.card:hover .ph .mini{transform:translateY(-10px)}
+.card .ph .mini svg{width:100%;height:auto;display:block;filter:drop-shadow(0 18px 14px rgba(60,20,30,.25))}
+.card .ph::before{content:"";position:absolute;left:0;right:0;bottom:10px;margin:auto;width:280px;height:280px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.75),transparent 70%);pointer-events:none}
+.card .ph .disc{position:absolute;left:0;right:0;margin:auto;bottom:26px;width:170px;height:22px;border-radius:50%;background:radial-gradient(closest-side,rgba(60,20,30,.18),transparent)}
+.card .glare{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(140px circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.45),transparent 70%);z-index:2}
+.card:hover .glare{opacity:1}
+.card .new{position:absolute;left:16px;top:16px;z-index:2}
+.card .tx{padding:20px 4px 0;display:grid;gap:4px}
+.card .nm{font-family:var(--f-display);font-size:30px;line-height:1.1}
+.card .ds{color:var(--mute);font-size:14px}
+.card .pr{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:14px;letter-spacing:.06em}
+.card .pr a{font-size:11px;letter-spacing:.24em;text-transform:uppercase}
+.h-touch{display:none}@media (hover:none){.h-hover{display:none}.h-touch{display:inline}}
+.card.intro{display:flex;flex-direction:column;justify-content:center;gap:18px;width:min(300px,72vw)}
+.card.intro p{color:var(--mute);margin:0}
+@media (max-width:820px){.rail{overflow-x:auto;scroll-snap-type:x mandatory;width:auto;padding-bottom:12px}.card{scroll-snap-align:start}}
+
+/* Notes */
+.notes{padding-block:150px}
+.notes .grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.quote{font-family:var(--f-display);font-weight:300;font-size:clamp(32px,3.6vw,54px);line-height:1.15;margin:0}
+.quote em{color:var(--crimson)}
+.tline{position:relative;list-style:none;margin:0;padding:0 0 0 54px;max-width:520px;justify-self:end;width:100%}
+.tline .track,.tline .fillv{position:absolute;left:14px;top:14px;bottom:14px;width:1px}
+.tline .track{background:rgba(43,11,20,.14)}
+.tline .fillv{background:var(--gold);transform-origin:top;transform:scaleY(0)}
+.tline li{position:relative;padding:0 0 64px}
+.tline li:last-child{padding-bottom:0}
+.tline .dot{position:absolute;left:-54px;top:6px;width:29px;height:29px;border-radius:50%;background:var(--powder);border:1px solid rgba(43,11,20,.25);display:grid;place-items:center;transition:border-color .3s}
+.tline .dot i{width:9px;height:9px;border-radius:50%;background:var(--crimson);transform:scale(0)}
+.tline li.on .dot{border-color:var(--gold)}
+.tline .time{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.tline .k{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--crimson);margin-top:4px}
+.tline .v{font-family:var(--f-display);font-style:italic;font-size:clamp(28px,2.6vw,38px);line-height:1.15}
+@media (max-width:900px){.notes .grid{grid-template-columns:1fr}.tline{justify-self:start}}
+
+/* Client care / FAQ */
+.care{padding-block:130px;display:grid;grid-template-columns:.8fr 1.2fr;gap:64px;align-items:start}
+.care-head p{color:var(--mute);max-width:34ch;margin:22px 0 0}
+.acc{border-top:1px solid rgba(43,11,20,.14)}
+.qa{border-bottom:1px solid rgba(43,11,20,.14)}
+.qa button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;background:none;border:0;padding:26px 0;cursor:pointer;text-align:left;font-family:var(--f-display);font-size:clamp(22px,2vw,28px);color:var(--ink);transition:color .3s}
+.qa button[aria-expanded="true"]{color:var(--crimson)}
+.chev{flex:none;width:12px;height:12px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg);margin-top:-6px}
+.ans{height:0;overflow:hidden;opacity:0}
+.ans p{margin:0;padding:0 0 26px;color:var(--mute);max-width:56ch}
+@media (max-width:900px){.care{grid-template-columns:1fr;gap:30px;padding-block:90px}}
+
+/* Buy */
+.buy{padding-block:130px;background:linear-gradient(180deg,var(--ivory),var(--powder));border-top:1px solid rgba(184,145,78,.25)}
+.buy .grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.buy-stage{position:relative;height:560px}
+.buy-stage .ring{top:4%;width:min(420px,90%)}
+.buy-stage .podium{bottom:0}
+.buy-btl{bottom:40px;width:230px;transform-origin:50% 100%;z-index:2}
+.buy-btl svg{width:100%;height:auto;display:block;filter:drop-shadow(0 26px 22px rgba(90,20,40,.22))}
+.seg{position:relative;display:inline-grid;grid-template-columns:repeat(3,auto);background:rgba(255,255,255,.55);border-radius:999px;padding:5px;box-shadow:inset 0 0 0 1px rgba(43,11,20,.14);margin:28px 0 26px}
+.seg button{position:relative;z-index:1;background:none;border:0;color:var(--ink);font:13px/1 var(--f-body);letter-spacing:.12em;padding:15px 26px;cursor:pointer;transition:color .25s}
+.seg button[aria-checked="true"]{color:var(--ivory)}
+.seg .thumb{position:absolute;top:5px;bottom:5px;left:0;border-radius:999px;background:linear-gradient(180deg,#8f1631,#6a0c21);box-shadow:0 6px 16px -8px rgba(122,16,39,.8)}
+.price{font-family:var(--f-display);font-weight:300;font-size:clamp(56px,6vw,88px);line-height:1;font-variant-numeric:tabular-nums;display:inline-block;transform-origin:left bottom}
+.buy ul{list-style:none;padding:0;margin:26px 0 36px;display:grid;gap:10px;color:var(--mute)}
+.buy li::before{content:"✦  ";color:var(--gold)}
+.add{min-width:300px;transition:min-width .3s cubic-bezier(.65,0,.35,1),width .3s cubic-bezier(.65,0,.35,1),padding .3s,transform .6s var(--ease)}
+.add.busy{min-width:56px;width:56px;padding:0}
+.add.busy .roll,.add.busy .sheen{opacity:0}
+.add .spin{position:absolute;inset:0;margin:auto;width:20px;height:20px;border-radius:50%;border:2px solid transparent;border-top-color:var(--ivory);border-right-color:var(--ivory);opacity:0;animation:sp .7s linear infinite}
+.add.busy .spin{opacity:1}
+.add.done{background:linear-gradient(180deg,#3d8b62,#24704a)}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (max-width:900px){.buy .grid{grid-template-columns:1fr}.buy-stage{height:460px}.add{min-width:0;width:100%}.add.busy{width:56px}}
+
+.toast{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:85;display:flex;gap:14px;align-items:center;padding:16px 20px 19px;border-radius:14px;background:rgba(251,246,242,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px rgba(184,145,78,.4),0 20px 40px -20px rgba(43,11,20,.5);max-width:calc(100vw - 36px);transform:translateX(calc(100% + 40px));overflow:hidden;font-size:14px}
+.toast .ic{width:24px;height:24px;border-radius:50%;background:var(--crimson);color:var(--ivory);display:grid;place-items:center;flex:none;font-size:12px}
+.toast .tl{position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--gold);transform-origin:left}
+
+footer{padding-block:90px 40px;background:var(--ink);color:rgba(251,246,242,.7);font-size:14px}
+.fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px}
+footer .brand{color:var(--ivory);font-size:26px}
+.fbrand p{margin:14px 0 26px}
+.fcol{display:grid;align-content:start;gap:10px}
+.fcol h4{margin:0 0 8px;font:11px/1 var(--f-body);letter-spacing:.3em;text-transform:uppercase;color:#e6c27f;font-weight:400}
+footer a.ln{color:rgba(251,246,242,.85);justify-self:start}
+.fbot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:70px;padding-top:26px;border-top:1px solid rgba(251,246,242,.12);font-size:12px}
+.news{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;max-width:440px}
+.field{position:relative;flex:1 1 220px;height:56px;border-radius:999px;background:var(--ivory);box-shadow:inset 0 0 0 1.5px rgba(43,11,20,.25);transition:box-shadow .15s cubic-bezier(.33,1,.68,1),background-color .15s}
+.field input{position:absolute;inset:0;width:100%;border:0;background:none;border-radius:999px;padding:18px 48px 0 22px;font:15px var(--f-body);color:var(--ink);outline:none}
+.field label{position:absolute;left:22px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--mute);pointer-events:none;transition:all .24s cubic-bezier(.33,1,.68,1)}
+.field input:focus+label,.field input:not(:placeholder-shown)+label{top:15px;font-size:11.5px;letter-spacing:.06em}
+.field.focus{box-shadow:inset 0 0 0 2.2px var(--crimson)}
+.field.focus label{color:var(--crimson)}
+.field.bad{box-shadow:inset 0 0 0 2.2px #e5383b;background:#fff1f1}
+.field.good{box-shadow:inset 0 0 0 2.2px #1e9e5a}
+.okc{position:absolute;right:12px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;background:#1e9e5a;color:#fff;font-size:13px;font-style:normal;display:grid;place-items:center;transform:scale(0)}
+.news .add{min-width:150px;height:56px}
+.news .add.busy{min-width:56px}
+.nmsg{flex-basis:100%;margin:0;min-height:20px;font-size:12px}
+.nmsg.bad{color:#ff8f91}.nmsg.good{color:#8fd9b0}
+.totop{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:84;width:46px;height:46px;border-radius:50%;border:0;background:var(--ivory);color:var(--ink);font-size:18px;cursor:pointer;box-shadow:0 10px 24px -10px rgba(43,11,20,.5),inset 0 0 0 1px rgba(184,145,78,.5);opacity:0;pointer-events:none}
+@media (max-width:900px){.fgrid{grid-template-columns:1fr 1fr}.fbrand{grid-column:1/-1}}
+@media (max-width:480px){.fgrid{grid-template-columns:1fr}}
+</style>
+
+<div id="pre" aria-hidden="true"><div class="b">ORANGERIE</div><div class="n">Figue Rose · N°7</div><div class="bar"><i id="pbar"></i></div><div class="pct" id="pct">0</div></div>
+<canvas id="grain" aria-hidden="true"></canvas>
+<div id="cur" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="travertine" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9 .08" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 .55  0 0 0 0 .46  0 0 0 0 .36  0 0 0 .32 0"/><feComposite in2="SourceGraphic" operator="in"/><feBlend in2="SourceGraphic" mode="multiply"/></filter>
+    <symbol id="podium" viewBox="0 0 380 92"><path d="M10 26 V64 A180 24 0 0 0 370 64 V26 Z" fill="#dcccb9"/><path d="M10 26 V64 A180 24 0 0 0 370 64 V26 Z" fill="#cdbba5" filter="url(#travertine)"/><ellipse cx="190" cy="26" rx="180" ry="24" fill="#efe5d9"/><ellipse cx="190" cy="26" rx="180" ry="24" fill="#e8dccd" filter="url(#travertine)"/><ellipse cx="190" cy="26" rx="179" ry="23" fill="none" stroke="#fff" stroke-opacity=".6"/></symbol>
+  </defs>
+</svg>
+
+<header id="hdr"><div class="wrap">
+  <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mmenu"><i></i><i></i><i></i></button>
+  <nav aria-label="Sections"><a class="ln" href="#collection" data-hover>Fragrance</a><a class="ln" href="#atelier" data-hover>Atelier</a><a class="ln" href="#notes" data-hover>Notes</a></nav>
+  <a class="brand" href="#top" data-hover>ORANGERIE</a>
+  <div class="right"><button class="cart" id="cart" type="button" data-hover>Bag<span class="badge" id="badge">0</span></button></div>
+</div></header>
+<nav class="mmenu" id="mmenu" aria-label="Menu" hidden><a href="#collection">Fragrance</a><a href="#atelier">Atelier</a><a href="#notes">Notes</a><a href="#buy">Shop Figue Rose</a><a href="#care">Client care</a></nav>
+
+<main id="top">
+  <section class="hero" id="hero">
+    <div class="wrap grid">
+      <div class="copy">
+        <div class="label">New · Eau de Parfum</div>
+        <h1 id="h1">A garden, embroidered in <em>fig &amp; silk</em></h1>
+        <i class="rule" id="rule"></i>
+        <p class="sub">Figue Rose opens with ripe fig and pink peony, then settles into warm wild honey. Every bottle is filled by hand.</p>
+        <div class="acts">
+          <span class="magnet" data-magnet><a class="btn solid" href="#buy" data-hover><i class="sheen"></i><span class="roll" data-roll>Discover the scent</span></a></span>
+          <a class="btn ghost" href="#collection" data-hover><span class="roll" data-roll>The collection</span></a>
+        </div>
+      </div>
+      <div class="stage" id="stage">
+        <div class="arch-win ctr" id="archwin"><img src="img/fig.webp" alt="" width="736" height="1307" fetchpriority="high"></div>
+        <svg id="silk" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="silkA" x1="0" x2="1"><stop offset="0" stop-color="#e9a8b6" stop-opacity="0"/><stop offset=".35" stop-color="#e9a8b6" stop-opacity=".55"/><stop offset=".7" stop-color="#f6c9d3" stop-opacity=".45"/><stop offset="1" stop-color="#e9a8b6" stop-opacity="0"/></linearGradient><linearGradient id="silkB" x1="0" x2="1"><stop offset="0" stop-color="#c9667f" stop-opacity="0"/><stop offset=".5" stop-color="#d98a9c" stop-opacity=".35"/><stop offset="1" stop-color="#c9667f" stop-opacity="0"/></linearGradient></defs><path id="silk1" fill="url(#silkA)"/><path id="silk2" fill="url(#silkB)"/></svg>
+        <div class="ring ctr" id="ring"></div>
+        <div class="podium ctr"><svg viewBox="0 0 380 92" aria-hidden="true"><use href="#podium"/></svg></div>
+        <div class="halo ctr" id="halo"></div><div class="caustic ctr"></div><div class="contact ctr"></div>
+        <div class="hero-btl ctr" id="herobtl"><div id="float" data-bottle="hero"></div></div>
+        <canvas id="petals" aria-hidden="true"></canvas>
+        <span class="tag t1"><small>Heart</small>ripe fig</span>
+        <span class="tag t2"><small>Base</small>wild honey</span>
+      </div>
+    </div>
+    <div class="cue" aria-hidden="true">Scroll<i id="cue"></i></div>
+  </section>
+
+  <section class="services" aria-label="Boutique services"><div class="wrap row">
+    <div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4-1L19 8l-3-3L5 16z"/><path d="M14 7l3 3"/><path d="M3 22h18"/></svg><h3>Complimentary engraving</h3><p>Your initials on the glass, done in our atelier.</p></div>
+    <div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18v4H3z"/><path d="M5 13v8h14v-8"/><path d="M12 9v12"/><path d="M12 9C10 5 6 5 6 7.5S12 9 12 9s6-.5 6-1.5S14 5 12 9"/></svg><h3>Signature gift box</h3><p>Wrapped in silk paper and tied with a ribbon.</p></div>
+    <div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h6M6 3v13a2 2 0 0 0 4 0V3"/><path d="M13 6h6M14 6v10a2 2 0 0 0 4 0V6"/></svg><h3>Two samples</h3><p>Discover another garden with every order.</p></div>
+    <div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h12v10H2z"/><path d="M14 9h4l3 3.5V16h-7"/><path d="M5.5 19.5a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0-3.6 0"/><path d="M15 19.5a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0-3.6 0"/></svg><h3>Delivery in 2–5 days</h3><p>Insured and tracked, door to door.</p></div>
+  </div></section>
+
+  <section class="zoom" id="atelier">
+    <div class="clip" id="clip"><img src="img/embroidery.webp" alt="Hand embroidery: peonies and songbirds on crimson silk" width="736" height="1104"></div>
+    <div class="label lb">The Atelier</div>
+    <p class="side l">Embroidered <em>by hand</em></p>
+    <p class="side r">thread by <em>thread</em></p>
+    <div class="over" id="over"><div><div class="label">The Atelier</div><h2>Silk, thread <em>&amp; scent</em></h2><p>Each label begins as a hand-embroidered garden of peonies and songbirds, then becomes the bottle you hold.</p></div></div>
+  </section>
+
+  <section class="coll" id="collection">
+    <div class="inner">
+      <div class="wrap head"><div><div class="label">The Collection</div><h2 style="margin-top:12px">Four gardens, <em>one house</em></h2></div><p class="hint" style="color:var(--mute);max-width:34ch;margin:0"><span class="h-hover">Hover a bottle to see what it is made of.</span><span class="h-touch">Swipe to browse the collection.</span></p></div>
+      <div class="rail" id="rail">
+        <article class="card intro"><div class="label">Eau de Parfum · 18%</div><h3 style="font-size:32px;line-height:1.15">Each fragrance is built around a single note</h3><p>Lasts eight to ten hours on skin, and longer on silk.</p></article>
+        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#f6dfe3"><img src="img/figs.webp" alt="Ripe figs" loading="lazy" width="736" height="1319"><span class="new label">New</span><i class="disc"></i><div class="mini" data-bottle="rose"></div><i class="glare"></i></div><div class="tx"><div class="label">Heart · fig</div><div class="nm">Figue Rose</div><div class="ds">Ripe fig, pink peony, fig leaf.</div><div class="pr"><span>$145 · 50 ml</span><a class="ln" href="#buy" data-kind="rose">Shop</a></div></div></article>
+        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#f5e6cc"><img src="img/honey.webp" alt="Honeycomb" loading="lazy" width="736" height="1104"><i class="disc"></i><div class="mini" data-bottle="honey"></div><i class="glare"></i></div><div class="tx"><div class="label">Base · honey</div><div class="nm">Miel Sauvage</div><div class="ds">Wild honey, beeswax, warm wood.</div><div class="pr"><span>$145 · 50 ml</span><a class="ln" href="#buy" data-kind="honey">Shop</a></div></div></article>
+        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#e3ebf2"><img src="img/lemon.webp" alt="Engraving of a lemon branch" loading="lazy" width="736" height="1280"><i class="disc"></i><div class="mini" data-bottle="citron"></div><i class="glare"></i></div><div class="tx"><div class="label">Top · lemon</div><div class="nm">Citron Bleu</div><div class="ds">Sicilian lemon and citrus blossom.</div><div class="pr"><span>$145 · 50 ml</span><a class="ln" href="#buy" data-kind="citron">Shop</a></div></div></article>
+        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#e9eed8"><img src="img/pistachio.webp" alt="Pistachios in pink shells" loading="lazy" width="600" height="900"><i class="disc"></i><div class="mini" data-bottle="pistache"></div><i class="glare"></i></div><div class="tx"><div class="label">Heart · pistachio</div><div class="nm">Pistache Rose</div><div class="ds">Roasted pistachio, pink pepper, cream.</div><div class="pr"><span>$160 · 50 ml</span><a class="ln" href="#buy" data-kind="pistache">Shop</a></div></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="notes wrap" id="notes">
+    <div class="grid">
+      <div><div class="label" style="margin-bottom:26px">How it unfolds · N°7</div><p class="quote" id="quote">It unfolds over three hours: lemon first, then <em>fig</em>, and by evening only honey stays on the skin.</p></div>
+      <ol class="tline" id="tline">
+        <i class="track" aria-hidden="true"></i><i class="fillv" id="fillv" aria-hidden="true"></i>
+        <li><span class="dot"><i></i></span><div class="tx"><div class="time">First 30 minutes</div><div class="k">Top</div><div class="v">lemon, bergamot</div></div></li>
+        <li><span class="dot"><i></i></span><div class="tx"><div class="time">30 minutes – 3 hours</div><div class="k">Heart</div><div class="v">ripe fig, pink peony</div></div></li>
+        <li><span class="dot"><i></i></span><div class="tx"><div class="time">Into the evening</div><div class="k">Base</div><div class="v">wild honey, vetiver, tonka</div></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="buy" id="buy">
+    <div class="wrap grid">
+      <div class="buy-stage"><div class="ring ctr"></div><div class="podium ctr"><svg viewBox="0 0 380 92" aria-hidden="true"><use href="#podium"/></svg></div><div class="halo ctr" style="bottom:2%"></div><div class="caustic ctr" style="bottom:28px"></div><div class="contact ctr" style="bottom:34px"></div><div class="buy-btl ctr" id="buybtl" data-bottle="buy"></div></div>
+      <div>
+        <div class="label" id="buyname">Orangerie N°7 · Figue Rose</div>
+        <h2 style="margin-top:14px">Choose your <em>size</em></h2>
+        <div class="seg" role="radiogroup" aria-label="Bottle size" id="seg"><i class="thumb" id="thumb"></i><button type="button" role="radio" aria-checked="false" data-v="30" data-p="95" data-s=".78" data-hover>30 ml</button><button type="button" role="radio" aria-checked="true" data-v="50" data-p="145" data-s=".9" data-hover>50 ml</button><button type="button" role="radio" aria-checked="false" data-v="100" data-p="210" data-s="1" data-hover>100 ml</button></div>
+        <div><span class="price" id="pricewrap">$<span id="price">145</span></span></div>
+        <ul><li>Gift box and a sample included</li><li>Free engraving on the bottle</li><li>Complimentary delivery in 2–5 days</li></ul>
+        <button class="btn solid add" id="add" type="button" data-hover><i class="sheen"></i><span class="roll" data-roll>Add to bag</span><i class="spin" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="care wrap" id="care">
+    <div class="care-head"><div class="label">Client care</div><h2 style="margin-top:12px">Questions, <em>answered</em></h2><p>Can't find what you need? Write to our concierge and we will reply within a day.</p></div>
+    <div class="acc" id="acc">
+      <div class="qa"><button type="button" aria-expanded="false"><span>How long does Figue Rose last?</span><i class="chev" aria-hidden="true"></i></button><div class="ans"><p>Eight to ten hours on skin and longer on clothing. The heart of fig and peony appears after about thirty minutes.</p></div></div>
+      <div class="qa"><button type="button" aria-expanded="false"><span>Is engraving really free?</span><i class="chev" aria-hidden="true"></i></button><div class="ans"><p>Yes. Add up to twelve characters at checkout and our atelier engraves them on the glass by hand.</p></div></div>
+      <div class="qa"><button type="button" aria-expanded="false"><span>Can I try a fragrance before buying a full bottle?</span><i class="chev" aria-hidden="true"></i></button><div class="ans"><p>Every order includes two samples, and the 30 ml bottle is made for discovering a scent.</p></div></div>
+      <div class="qa"><button type="button" aria-expanded="false"><span>How is my order delivered?</span><i class="chev" aria-hidden="true"></i></button><div class="ans"><p>In our signature gift box, insured and tracked. Delivery takes two to five days.</p></div></div>
+      <div class="qa"><button type="button" aria-expanded="false"><span>Can I return a fragrance?</span><i class="chev" aria-hidden="true"></i></button><div class="ans"><p>Unopened bottles can be returned within fourteen days. Engraved bottles are made for you and cannot be returned.</p></div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap fgrid">
+    <div class="fbrand"><div class="brand">ORANGERIE</div><p>Maison de parfum. Gardens, embroidered in scent.</p>
+      <form class="news" id="news" novalidate>
+        <div class="field" id="field"><input id="email" type="email" autocomplete="email" placeholder=" " aria-describedby="nmsg"><label for="email">Email for new gardens</label><i class="okc" aria-hidden="true">✓</i></div>
+        <button class="btn solid add" id="nbtn" type="submit"><i class="sheen"></i><span class="roll" data-roll>Subscribe</span><i class="spin" aria-hidden="true"></i></button>
+        <p class="nmsg" id="nmsg" aria-live="polite"></p>
+      </form></div>
+    <div class="fcol"><h4>Shop</h4><a class="ln" href="#buy" data-kind="rose">Figue Rose</a><a class="ln" href="#buy" data-kind="honey">Miel Sauvage</a><a class="ln" href="#buy" data-kind="citron">Citron Bleu</a><a class="ln" href="#buy" data-kind="pistache">Pistache Rose</a></div>
+    <div class="fcol"><h4>The House</h4><a class="ln" href="#atelier">Atelier</a><a class="ln" href="#notes">How it unfolds</a><a class="ln" href="#collection">Collection</a></div>
+    <div class="fcol"><h4>Client care</h4><a class="ln" href="#care">Questions</a><span>Complimentary engraving</span><span>Delivery in 2–5 days</span></div>
+  </div>
+  <div class="wrap fbot"><span>© 2026 Orangerie. Demo website: the brand, fragrances and prices are fictional.</span><span>Website by Matvei Kutafin · <a class="ln" href="https://t.me/rolqm" target="_blank" rel="noopener">Telegram @rolqm</a></span></div>
+</footer>
+<button class="totop" id="totop" type="button" aria-label="Back to top">↑</button>
+<div class="toast" id="toast" role="status"><span class="ic">✓</span><span id="tmsg">Added</span><i class="tl" id="tl"></i></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
+<script>
+(function(){
+var hasG=typeof gsap!=='undefined';if(hasG)gsap.registerPlugin(ScrollTrigger,SplitText,ScrollToPlugin);
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches,HOVER=matchMedia('(hover:hover)').matches;
+var EASE='power4.out',DUR=0.9;
+function clamp(x){return Math.max(0,Math.min(1,x))}
+function rnd(s){return function(){s=(s*16807)%2147483647;return (s-1)/2147483646}}
+
+/* ===== Hand-drawn bottle: SVG, our own design (lacquered glass, ribbed gold cap, arched botanical label) ===== */
+var BODY='M38 132 L72 106 H168 L202 132 V408 Q202 422 188 422 H52 Q38 422 38 408 Z';
+var LAB='M68 398 V230 A52 52 0 0 1 172 230 V398 Z';
+var KINDS={
+  rose:{base:'#efa3b4',deep:'#b95b73',light:'#fbd6de',fl:['#c2264f','#f7c6d0'],name:'Figue Rose'},
+  honey:{base:'#e7b25f',deep:'#a86e22',light:'#f7dca5',fl:['#c97a1c','#f6d79a'],name:'Miel Sauvage'},
+  citron:{base:'#afc7df',deep:'#6f8dae',light:'#e2edf6',fl:['#e3c43a','#fbf0b0'],name:'Citron Bleu'},
+  pistache:{base:'#c7d49e',deep:'#8a9c5e',light:'#e9efd0',fl:['#c25476','#f0c3cf'],name:'Pistache Rose'}
+};
+function botanical(r,k){var o='',i;
+  for(i=0;i<9;i++){var x=74+i*11.5+r()*8,top=262+r()*60;o+='<path d="M'+x.toFixed(1)+' 400 C'+(x+(r()*24-12)).toFixed(1)+' '+(top+60).toFixed(1)+' '+(x+(r()*24-12)).toFixed(1)+' '+(top+20).toFixed(1)+' '+(x+r()*10-5).toFixed(1)+' '+top.toFixed(1)+'" stroke="#3f6b4a" stroke-width="1.2" fill="none"/>';
+    for(var j=0;j<2;j++){var ly=(top+30+j*34+r()*10).toFixed(1),lx=(x+(j?6:-6)).toFixed(1);o+='<ellipse cx="'+lx+'" cy="'+ly+'" rx="7" ry="2.6" fill="'+(r()<.5?'#4f7f58':'#7aa275')+'" transform="rotate('+(j?-35:35)+' '+lx+' '+ly+')"/>';}}
+  for(i=0;i<2;i++){var fx=88+i*62+r()*8,fy=340+r()*24,s=9;o+='<path d="M'+fx+' '+(fy-s*1.15)+' C'+(fx+s*.95)+' '+(fy-s*.2)+' '+(fx+s*.95)+' '+(fy+s)+' '+fx+' '+(fy+s)+' C'+(fx-s*.95)+' '+(fy+s)+' '+(fx-s*.95)+' '+(fy-s*.2)+' '+fx+' '+(fy-s*1.15)+'Z" fill="#6b2a4a"/><path d="M'+(fx-3)+' '+(fy-2)+' q3 -4 6 0" stroke="#e9a8b6" stroke-width="1.4" fill="none"/>';}
+  [[96,286,13],[146,276,15],[120,318,12],[160,330,9],[82,328,8],[110,262,8],[134,298,10],[94,356,10],[152,356,10],[124,282,7],[166,300,8],[80,302,7],[124,348,8]].forEach(function(p,n){var c=n%2?k.fl[1]:k.fl[0],c2=n%2?k.fl[0]:k.fl[1];for(var a=0;a<8;a++){var an=a/8*Math.PI*2+r();o+='<circle cx="'+(p[0]+Math.cos(an)*p[2]*.55).toFixed(1)+'" cy="'+(p[1]+Math.sin(an)*p[2]*.55).toFixed(1)+'" r="'+(p[2]*.48).toFixed(1)+'" fill="'+c+'" opacity=".92"/>';}
+    o+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(p[2]*.55)+'" fill="'+c2+'"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(p[2]*.22)+'" fill="#e6b54a"/>';});
+  for(i=0;i<22;i++){var bx=(76+r()*88).toFixed(1),by=(300+r()*80).toFixed(1);o+='<ellipse cx="'+bx+'" cy="'+by+'" rx="8" ry="3" fill="'+(r()<.5?'#3f6b4a':'#86ad7c')+'" transform="rotate('+(r()*140-70).toFixed(0)+' '+bx+' '+by+')"/>';}
+  for(i=0;i<12;i++){o+='<circle cx="'+(76+r()*88).toFixed(1)+'" cy="'+(256+r()*120).toFixed(1)+'" r="3.2" fill="'+k.fl[i%2]+'"/>';}
+  for(i=0;i<30;i++){o+='<circle cx="'+(74+r()*92).toFixed(1)+'" cy="'+(262+r()*120).toFixed(1)+'" r="1.6" fill="'+(r()<.5?'#f6e7a8':'#9fb7e3')+'"/>';}
+  return o;}
+var uid=0;
+function bottle(kind){var k=KINDS[kind],g='b'+(uid++),r=rnd(7+uid*13);
+  return '<svg viewBox="0 0 240 430" role="img" aria-label="'+k.name+' bottle"><defs>'+
+  '<linearGradient id="'+g+'gl" x1="0" x2="1"><stop offset="0" stop-color="'+k.deep+'"/><stop offset=".09" stop-color="'+k.base+'"/><stop offset=".26" stop-color="'+k.light+'"/><stop offset=".44" stop-color="'+k.base+'"/><stop offset=".76" stop-color="'+k.base+'"/><stop offset=".92" stop-color="'+k.deep+'"/><stop offset="1" stop-color="'+k.deep+'"/></linearGradient>'+
+  '<radialGradient id="'+g+'vol" cx=".34" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset=".45" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="'+k.deep+'" stop-opacity=".5"/></radialGradient>'+
+  '<linearGradient id="'+g+'cv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".4"/><stop offset=".14" stop-color="#fff" stop-opacity="0"/><stop offset=".82" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#3a2400" stop-opacity=".4"/></linearGradient>'+
+  '<linearGradient id="'+g+'pp" x1="0" x2="1"><stop offset="0" stop-color="#eadccb"/><stop offset=".25" stop-color="#fffaf3"/><stop offset=".8" stop-color="#fbf3e8"/><stop offset="1" stop-color="#e4d4c0"/></linearGradient>'+
+  '<filter id="'+g+'bl" x="-60%" y="-10%" width="220%" height="120%"><feGaussianBlur stdDeviation="3"/></filter>'+
+  '<linearGradient id="'+g+'au" x1="0" x2="1"><stop offset="0" stop-color="#7d5a1c"/><stop offset=".22" stop-color="#f3d58c"/><stop offset=".45" stop-color="#c79a3e"/><stop offset=".72" stop-color="#f6dea0"/><stop offset="1" stop-color="#7d5a1c"/></linearGradient>'+
+  '<pattern id="'+g+'rib" width="5" height="10" patternUnits="userSpaceOnUse"><rect width="2.5" height="10" fill="rgba(255,255,255,.2)"/><rect x="2.5" width="2.5" height="10" fill="rgba(60,30,0,.18)"/></pattern>'+
+  '<linearGradient id="'+g+'sw" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'+
+  '<clipPath id="'+g+'bd"><path d="'+BODY+'"/></clipPath><clipPath id="'+g+'lb"><path d="'+LAB+'"/></clipPath></defs>'+
+  '<rect x="82" y="6" width="76" height="90" rx="3" fill="url(#'+g+'au)"/><rect x="82" y="6" width="76" height="90" rx="3" fill="url(#'+g+'rib)"/><rect x="82" y="6" width="76" height="90" rx="3" fill="url(#'+g+'cv)"/><rect x="82" y="6" width="76" height="5" rx="2.5" fill="#fbe7b0" opacity=".9"/><rect x="95" y="12" width="6" height="80" fill="#fff" opacity=".55" filter="url(#'+g+'bl)"/>'+
+  '<rect x="76" y="94" width="88" height="12" rx="2" fill="url(#'+g+'au)"/><rect x="76" y="94" width="88" height="2.5" fill="#3a2400" opacity=".3"/><rect x="78" y="97" width="84" height="1.2" fill="#fff3cf" opacity=".8"/>'+
+  '<path d="'+BODY+'" fill="url(#'+g+'gl)"/>'+
+  '<g clip-path="url(#'+g+'bd)"><path d="'+BODY+'" fill="url(#'+g+'vol)"/>'+
+  '<path d="M72 106 H168 L160 112 H80 Z" fill="#fff" opacity=".5"/><path d="M38 132 L72 106 L80 112 L46 136 Z" fill="#fff" opacity=".38"/><path d="M202 132 L168 106 L160 112 L194 136 Z" fill="'+k.deep+'" opacity=".5"/>'+
+  '<path d="M46 136 L80 112 H160 L194 136 V402 Q194 412 184 412 H56 Q46 412 46 402 Z" fill="none" stroke="#fff" stroke-opacity=".42" stroke-width="1.4"/>'+
+  '<rect x="38" y="404" width="164" height="20" fill="'+k.deep+'" opacity=".4"/><rect x="46" y="403" width="148" height="1.6" fill="#fff" opacity=".6"/>'+
+  '<rect x="49" y="140" width="13" height="252" rx="6" fill="#fff" opacity=".6" filter="url(#'+g+'bl)"/><rect x="53" y="150" width="3" height="205" rx="1.5" fill="#fff" opacity=".9"/>'+
+  '<ellipse cx="60" cy="124" rx="11" ry="2.6" fill="#fff" opacity=".9" transform="rotate(-37 60 124)"/>'+
+  '<rect x="192" y="140" width="5" height="260" rx="2" fill="#fff" opacity=".4" filter="url(#'+g+'bl)"/><rect x="196.5" y="142" width="1.2" height="256" fill="#fff" opacity=".7"/></g>'+
+  '<path d="'+LAB+'" fill="url(#'+g+'pp)"/>'+
+  '<g clip-path="url(#'+g+'lb)">'+botanical(r,k)+'<path d="'+LAB+'" fill="none" stroke="#3a1a10" stroke-opacity=".14" stroke-width="6"/><rect x="64" y="170" width="22" height="240" fill="#fff" opacity=".2" transform="skewX(-10)"/></g>'+
+  '<path d="'+LAB+'" fill="none" stroke="#b8914e" stroke-width="2"/><path d="M73 393 V230 A47 47 0 0 1 167 230 V393 Z" fill="none" stroke="#b8914e" stroke-width=".7"/>'+
+  '<text x="120" y="214" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="9.5" letter-spacing="2.4" fill="#2b0b14">ORANGERIE</text>'+
+  '<text x="120" y="242" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-style="italic" font-size="19" fill="#7a1027">N°7</text>'+
+  '<rect x="80" y="378" width="80" height="14" fill="#fbf3e8" opacity=".9"/><text x="120" y="389" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-style="italic" font-size="11" fill="#2b0b14">'+k.name+'</text>'+
+  '<g clip-path="url(#'+g+'bd)"><rect class="sweep" x="-60" y="100" width="60" height="330" fill="url(#'+g+'sw)" transform="skewX(-16)"/></g>'+
+  '</svg>';}
+document.querySelectorAll('[data-bottle]').forEach(function(el){var t=el.dataset.bottle;el.innerHTML=bottle(t==='hero'||t==='buy'?'rose':t);});
+
+// Motion Prompt #118 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#118
+// Film grain: static grain with a fixed seed, 0.8–1.7 px squares, 55% dark / 45% light (multiplied over a light page)
+var gc=document.getElementById('grain'),gx=gc.getContext('2d');
+function grain(){var w=gc.width=Math.min(innerWidth,1600),h=gc.height=Math.min(innerHeight,1000),r=rnd(7),n=Math.round(w*h/200);
+  for(var i=0;i<n;i++){gx.fillStyle=r()<.55?'#3A3530':'#ffffff';var s=.8+r()*.9;gx.fillRect(r()*w,r()*h,s,s);}}
+grain();addEventListener('resize',grain);
+
+// Motion Prompt #156 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#156
+// Text roll: letters slide up with a 0.035 s step over 0.36 s, a copy rolls in from below
+document.querySelectorAll('[data-roll]').forEach(function(el){var t=el.textContent,h='';[].forEach.call(t,function(c,i){h+='<span class="ch" style="--i:'+i+'">'+(c===' '?'&nbsp;':c)+'</span>'});
+  el.innerHTML='<span class="w" aria-hidden="true">'+h+'<span class="w2">'+h+'</span></span>';el.parentElement.setAttribute('aria-label',t);});
+
+/* Silk ribbon behind the bottle: two translucent bands with slow waves (custom, not from the library) */
+var s1=document.getElementById('silk1'),s2=document.getElementById('silk2'),stage=document.getElementById('stage'),heroVisible=true;
+new IntersectionObserver(function(es){heroVisible=es[0].isIntersecting}).observe(stage);
+function band(t,y0,amp,th,ph){var top=[],bot=[];for(var i=0;i<=40;i++){var x=i*25,w=Math.sin(x/170+t*.55+ph)*amp+Math.sin(x/90-t*.3)*amp*.35,tk=th*(.55+.45*Math.sin(x/220+t*.4+ph));top.push(x+' '+(y0+w).toFixed(1));bot.unshift(x+' '+(y0+w+tk).toFixed(1));}return 'M'+top.join(' L')+' L'+bot.join(' L')+'Z';}
+function silk(t){s1.setAttribute('d',band(t,210,70,120,0));s2.setAttribute('d',band(t*1.2,250,55,70,2));}
+silk(0);
+
+/* Floating petals around the stage (custom) */
+var pc=document.getElementById('petals'),px=pc.getContext('2d'),PET=[],pr=rnd(21);
+for(var i=0;i<16;i++)PET.push({x:pr(),y:pr(),s:5+pr()*6,v:.02+pr()*.03,a:pr()*6,sp:.6+pr(),c:pr()<.6?'233,168,182':'122,16,39'});
+function petSize(){pc.width=pc.clientWidth*devicePixelRatio;pc.height=pc.clientHeight*devicePixelRatio;}
+petSize();addEventListener('resize',petSize);
+function petals(t,dt){var W=pc.width,H=pc.height,d=devicePixelRatio;px.clearRect(0,0,W,H);
+  PET.forEach(function(p){p.y+=p.v*dt;if(p.y>1.05){p.y=-.05;p.x=pr();}var x=(p.x+Math.sin(t*p.sp+p.a)*.03)*W,y=p.y*H;
+    px.save();px.translate(x,y);px.rotate(t*p.sp+p.a);px.scale(1,.55+.45*Math.sin(t*p.sp*1.6+p.a));px.fillStyle='rgba('+p.c+',.75)';px.beginPath();px.ellipse(0,0,p.s*d,p.s*d*.62,0,0,7);px.fill();px.restore();});}
+
+/* Bottle loop: float + light sweep */
+var flt=document.getElementById('float'),sweeps=document.getElementsByClassName('sweep'),last=performance.now(),t0=last;
+if(!RM)requestAnimationFrame(function loop(now){requestAnimationFrame(loop);var dt=Math.min(.05,(now-last)/1000);last=now;var t=(now-t0)/1000;
+  // Motion Prompt #096 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#096
+  // Floating: y = −8·sin(2πt/2.4) px (period slowed to 4.8 s for a heavier glass bottle)
+  if(heroVisible){flt.style.transform='translateY('+(-8*Math.sin(2*Math.PI*t/4.8)).toFixed(2)+'px)';silk(t);petals(t,dt);}
+  // Motion Prompt #022 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#022
+  // Light sweep: the beam crosses the glass between 0.45 and 1.5 s of a 4.7 s cycle, quad in-out
+  var c=t%4.7,q=clamp((c-.45)/1.05),e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2,sx=(-60+e*400).toFixed(1);
+  for(var i=0;i<sweeps.length;i++)sweeps[i].setAttribute('x',sx);});
+
+// Motion Prompt #083 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#083
+// Cursor follower: the ring covers 12% of the remaining distance per frame and grows over links and cards
+var cur=document.getElementById('cur'),cx=-100,cy=-100,tx=-100,ty=-100;
+if(HOVER&&!RM){addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;cur.style.opacity=1});
+  document.querySelectorAll('[data-hover]').forEach(function(el){el.addEventListener('mouseenter',function(){cur.classList.add('big')});el.addEventListener('mouseleave',function(){cur.classList.remove('big')})});
+  requestAnimationFrame(function cf(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;cur.style.transform='translate3d('+cx.toFixed(1)+'px,'+cy.toFixed(1)+'px,0)';requestAnimationFrame(cf)});}
+
+// Motion Prompt #084 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#084
+// Magnetic button: 110 px zone, target = offset × 0.35, return in 1.1 s with elastic.out(1, 0.3)
+if(HOVER&&!RM&&hasG)document.querySelectorAll('[data-magnet]').forEach(function(m){var inside=false,xTo=gsap.quickTo(m,'x',{duration:.35,ease:'power3.out'}),yTo=gsap.quickTo(m,'y',{duration:.35,ease:'power3.out'});
+  addEventListener('mousemove',function(e){var r=m.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+    if(Math.hypot(dx,dy)<110+r.width/2){inside=true;xTo(dx*.35);yTo(dy*.35);}else if(inside){inside=false;gsap.to(m,{x:0,y:0,duration:1.1,ease:'elastic.out(1,0.3)'});}});});
+
+// Motion Prompt #153 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#153
+// 3D tilt: offset −1…1 × 0.18 rad, perspective, 130 px glare, 0.4 s
+if(HOVER&&!RM)document.querySelectorAll('[data-tilt]').forEach(function(c){
+  c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect(),nx=(e.clientX-r.left)/r.width*2-1,ny=(e.clientY-r.top)/r.height*2-1;c.style.transform='rotateY('+(nx*.18)+'rad) rotateX('+(-ny*.12)+'rad)';c.style.setProperty('--gx',(e.clientX-r.left)+'px');c.style.setProperty('--gy',(e.clientY-r.top)+'px')});
+  c.addEventListener('mouseleave',function(){c.style.transform=''});});
+
+if(!hasG)return;
+var hdr=document.getElementById('hdr');
+ScrollTrigger.create({trigger:'#hero',start:'top top-=40',end:'max',onToggle:function(s){hdr.classList.toggle('solid',s.isActive)}});
+
+var mm=gsap.matchMedia();
+mm.add({animate:'(prefers-reduced-motion: no-preference)',reduce:'(prefers-reduced-motion: reduce)',wide:'(min-width: 821px)'},function(ctx){
+  var a=ctx.conditions.animate,wide=ctx.conditions.wide;
+  if(!a){var p0=document.getElementById('pre');p0&&p0.remove();gsap.set('#fillv',{scaleY:1});gsap.set('.tline .dot i',{scale:1});document.querySelectorAll('.tline li').forEach(function(l){l.classList.add('on')});return;}
+
+  // Motion Prompt #089 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#089
+  // Preloader: 0→100 over 0.25–2.1 s (cubic ease-out), the screen slides up at 2.3–2.85 s (cubic in-out)
+  var seen=false;try{seen=sessionStorage.getItem('orangerie-pre')==='1';sessionStorage.setItem('orangerie-pre','1')}catch(e){}
+  if(seen){var p1=document.getElementById('pre');p1&&p1.remove();}else{var cnt={v:0},pct=document.getElementById('pct');
+    gsap.timeline().to(cnt,{v:100,duration:1.85,ease:'power2.out',delay:.25,onUpdate:function(){pct.textContent=Math.round(cnt.v)}},0)
+      .to('#pbar',{scaleX:1,duration:1.85,ease:'power2.out'},.25)
+      .to('#pre',{yPercent:-100,duration:.55,ease:'power2.inOut',onComplete:function(){var p=document.getElementById('pre');p&&p.remove()}},2.3);}
+  var at=seen?0:2.35;
+
+  // Motion Prompt #005 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#005
+  // Mask reveal via SplitText: the line grows for 0.4 s, lines rise from behind the edge (power4.out ≈ quintic ease-out), 0.12 s apart
+  gsap.fromTo('#rule',{scaleX:0},{scaleX:1,duration:.4,ease:'power3.inOut',delay:at+.1});
+  gsap.from('.hero .label, .hero .sub, .hero .acts',{opacity:0,y:18,duration:DUR,ease:EASE,stagger:.12,delay:at+.6});
+  document.fonts.ready.then(function(){var split=new SplitText('#h1',{type:'lines',linesClass:'split-line',mask:'lines'});
+    gsap.from(split.lines,{yPercent:110,duration:DUR,ease:EASE,stagger:.12,delay:at+.35,onComplete:function(){split.revert()}});ScrollTrigger.refresh();});
+
+  // Hero stage builds in: the arch opens upward, the ring appears, the bottle rises onto the podium
+  gsap.timeline({delay:at+.15})
+    .from('#archwin',{clipPath:'inset(100% 0% 0% 0%)',duration:1.3,ease:'power3.inOut'})
+    .from('#ring',{scale:.85,opacity:0,duration:1.2,ease:EASE},'-=.8')
+    .from('#herobtl',{y:60,opacity:0,duration:1.1,ease:EASE},'-=.9')
+    .from('.stage .tag',{opacity:0,x:function(i){return i?20:-20},duration:.8,ease:EASE,stagger:.15},'-=.5');
+
+  // Light: the halo behind the bottle breathes slowly (custom)
+  gsap.to('#halo',{scale:1.06,opacity:.85,duration:4,ease:'sine.inOut',repeat:-1,yoyo:true});
+
+  // Motion Prompt #167 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#167
+  // Scroll-down cue: the line repeats its downward stroke
+  gsap.fromTo('#cue',{scaleY:0},{scaleY:1,duration:1.1,ease:'power2.inOut',repeat:-1,yoyo:true});
+
+  // Motion Prompt #073 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#073
+  // Parallax: depth layers move at different rates (arch photo, ring, copy), scrub
+  var pl={trigger:'#hero',start:'top top',end:'bottom top',scrub:1};
+  gsap.to('#archwin img',{yPercent:-12,ease:'none',scrollTrigger:pl});
+  gsap.to('#ring',{y:-80,ease:'none',scrollTrigger:pl});
+  gsap.to('.hero .copy',{y:60,ease:'none',scrollTrigger:pl});
+
+  // Motion Prompt #152 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#152
+  // Zoom on scroll: the arch opens to the full screen (clip-path instead of width/height), captions fade at p 0→0.45, the title appears at p 0.7→1
+  gsap.timeline({scrollTrigger:{trigger:'#atelier',start:'top top',end:'+=150%',pin:true,scrub:1,anticipatePin:1}})
+    .to('#clip',{clipPath:'inset(0% 0% 0% 0% round 0px 0px 0px 0px)',ease:'none',duration:1},0)
+    .to('#atelier .side, #atelier .lb',{opacity:0,ease:'none',duration:.45},0)
+    .fromTo('#clip img',{scale:1.15},{scale:1,ease:'none',duration:1},0)
+    .to('#over',{opacity:1,ease:'none',duration:.3},.7);
+
+  // Motion Prompt #077 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#077
+  // Horizontal scroll: the section is pinned, the rail moves left linearly with scroll (ease: none)
+  if(wide){var rail=document.getElementById('rail');
+    gsap.to(rail,{x:function(){return -(rail.scrollWidth-innerWidth)},ease:'none',scrollTrigger:{trigger:'#collection',start:'top top',end:function(){return '+='+(rail.scrollWidth-innerWidth)},pin:true,scrub:1,invalidateOnRefresh:true,anticipatePin:1}});}
+
+  // Motion Prompt #074 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#074
+  // Fade-in on scroll: rise from 28 px over 0.7 s at the 85% line, in batches via ScrollTrigger.batch
+  ScrollTrigger.batch('.notes .label, .buy-stage, .buy .grid > div:last-child > *',{start:'top 85%',onEnter:function(b){gsap.from(b,{y:28,opacity:0,duration:.7,ease:'power3.out',stagger:.08,overwrite:true})}});
+
+  // Motion Prompt #146 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#146
+  // Scroll text reveal: character n lights up at clamp(p × N − n), here SplitText chars + stagger under scrub
+  document.fonts.ready.then(function(){var qs=new SplitText('#quote',{type:'words,chars'});
+    gsap.fromTo(qs.chars,{opacity:.14},{opacity:1,ease:'none',stagger:.05,scrollTrigger:{trigger:'#quote',start:'top 80%',end:'bottom 40%',scrub:1}});ScrollTrigger.refresh();});
+
+  // Motion Prompt #145 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#145
+  // Timeline on scroll: the gold line grows with scroll, its tip stays at a fixed screen line (60%); when it reaches a dot the ring turns gold,
+  // the inner dot grows from 0, and the text fades in sliding 16 px from the right (cubic ease-out). Scrolling back reverses it.
+  gsap.to('#fillv',{scaleY:1,ease:'none',scrollTrigger:{trigger:'#tline',start:'top 60%',end:'bottom 60%',scrub:1}});
+  gsap.utils.toArray('.tline li').forEach(function(li){
+    var tl=gsap.timeline({paused:true}).to(li.querySelector('.dot i'),{scale:1,duration:.4,ease:'power2.out'},0).fromTo(li.querySelector('.tx'),{x:16,opacity:0},{x:0,opacity:1,duration:.5,ease:'power2.out'},0);
+    ScrollTrigger.create({trigger:li,start:'top 60%',onEnter:function(){li.classList.add('on');tl.play()},onLeaveBack:function(){li.classList.remove('on');tl.reverse()}});});
+
+  // Motion Prompt #004 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#004
+  // Line draw: each service icon draws itself as a trim path (cubic in-out, shortened to 1.2 s for small icons), titles follow
+  var icons=gsap.utils.toArray('.svc path');icons.forEach(function(p){var L=p.getTotalLength();gsap.set(p,{strokeDasharray:L,strokeDashoffset:L})});
+  gsap.timeline({scrollTrigger:{trigger:'.services',start:'top 80%'}})
+    .to(icons,{strokeDashoffset:0,duration:1.2,ease:'power2.inOut',stagger:.06})
+    .from('.svc h3, .svc p',{opacity:0,y:14,duration:.7,ease:'power3.out',stagger:.06},.3);
+});
+
+// Motion Prompt #060 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#060
+// Segmented control: the pill slides to the chosen segment in 0.25 s (easeInOutCubic); the bottle grows with the size
+// Motion Prompt #007 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#007
+// Count-up: the price rolls by 1 − (1 − p)^4 and snaps with a 1 + 0.07·e^(−7t)·cos(15t) bounce
+var seg=document.getElementById('seg'),thumb=document.getElementById('thumb'),btns=[].slice.call(seg.querySelectorAll('button')),priceEl=document.getElementById('price'),pw=document.getElementById('pricewrap'),buyBtl=document.getElementById('buybtl'),buyName=document.getElementById('buyname'),val={v:145},kind='rose';
+var PRICES={rose:[95,145,210],honey:[95,145,210],citron:[95,145,210],pistache:[105,160,230]};
+gsap.set(buyBtl,{scale:.9,transformOrigin:'50% 100%'});
+function place(b,instant){gsap.to(thumb,{x:b.offsetLeft,width:b.offsetWidth,duration:instant||RM?0:.25,ease:'power2.inOut'})}
+function sel(){return seg.querySelector('[aria-checked="true"]')}
+function showPrice(v){gsap.to(val,{v:v,duration:RM?0:.9,ease:'power4.out',onUpdate:function(){priceEl.textContent=Math.round(val.v)},
+  onComplete:function(){if(RM)return;var s={t:0};gsap.to(s,{t:1.2,duration:1.2,ease:'none',onUpdate:function(){gsap.set(pw,{scale:1+.07*Math.exp(-7*s.t)*Math.cos(15*s.t)})}})}});}
+btns.forEach(function(b,i){b.addEventListener('click',function(){btns.forEach(function(x){x.setAttribute('aria-checked',x===b)});place(b);
+  gsap.to(buyBtl,{scale:+b.dataset.s,duration:RM?0:.6,ease:'power2.out'});showPrice(PRICES[kind][i]);});});
+function setKind(k){if(!KINDS[k]||k===kind)return;kind=k;buyName.textContent='Orangerie N°7 · '+KINDS[k].name;
+  gsap.fromTo(buyBtl,{opacity:0,y:20},{opacity:1,y:0,duration:RM?0:.7,ease:'power2.out',onStart:function(){buyBtl.innerHTML=bottle(k)}});
+  showPrice(PRICES[k][btns.indexOf(sel())]);}
+document.querySelectorAll('[data-kind]').forEach(function(a){a.addEventListener('click',function(){setKind(a.dataset.kind)})});
+document.fonts.ready.then(function(){place(sel(),true)});addEventListener('resize',function(){place(sel(),true)});
+
+// Motion Prompt #160 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#160
+// Loading button: shrinks to a circle in 0.3 s, spinner ~1.2 s, green "Added"
+// Motion Prompt #056 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#056
+// Toast: slides in from the right in 0.35 s (easeOutCubic), timer bar runs 1.8 s linearly, slides out in 0.35 s (easeInOutCubic)
+// Motion Prompt #071 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#071
+// Badge: first time scale 0→1, then a 1.3→1 bump over 0.3 s
+var add=document.getElementById('add'),lbl=add.querySelector('.roll'),badge=document.getElementById('badge'),toast=document.getElementById('toast'),tmsg=document.getElementById('tmsg'),n=0,tl=null;
+function showToast(msg,hold){tmsg.textContent=msg;if(tl)tl.kill();tl=gsap.timeline().fromTo(toast,{x:'110%'},{x:0,duration:.35,ease:'power2.out'}).fromTo('#tl',{scaleX:1},{scaleX:0,duration:hold||1.8,ease:'none'}).to(toast,{x:'110%',duration:.35,ease:'power2.inOut'});}
+add.addEventListener('click',function(){if(add.classList.contains('busy')||add.classList.contains('done'))return;var vol=sel().dataset.v,old=lbl.innerHTML;
+  add.classList.add('busy');setTimeout(function(){add.classList.remove('busy');add.classList.add('done');lbl.textContent='✓ Added';n++;badge.textContent=n;
+    gsap.fromTo(badge,{scale:n===1?0:1.3},{scale:1,duration:.3,ease:'power3.out'});showToast(KINDS[kind].name+', '+vol+' ml — added to your bag');
+    setTimeout(function(){add.classList.remove('done');lbl.innerHTML=old},2200);},1500);});
+document.getElementById('cart').addEventListener('click',function(){showToast(n?('Your bag: '+n+' item'+(n>1?'s':'')+'. This is a demo, checkout connects to the real shop.'):'Your bag is empty',3.2)});
+
+// Motion Prompt #065 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#065
+// Hamburger menu: the lines turn into × (top and bottom meet in the centre and rotate ±45°, the middle fades),
+// the menu drops from under the header; open amount 0→1 over 0.3 s, easeInOutCubic
+var burger=document.getElementById('burger'),mmenu=document.getElementById('mmenu'),mOpen=false;
+function menu(open){mOpen=open;burger.setAttribute('aria-expanded',open);burger.setAttribute('aria-label',open?'Close menu':'Open menu');
+  if(open){mmenu.hidden=false;gsap.fromTo(mmenu,{clipPath:'inset(0 0 100% 0)'},{clipPath:'inset(0 0 0% 0)',duration:RM?0:.3,ease:'power2.inOut'});gsap.fromTo('.mmenu a',{opacity:0,y:-8},{opacity:1,y:0,duration:.3,stagger:.04,delay:.1,ease:'power2.out'});}
+  else gsap.to(mmenu,{clipPath:'inset(0 0 100% 0)',duration:RM?0:.3,ease:'power2.inOut',onComplete:function(){if(!mOpen)mmenu.hidden=true}});}
+burger.addEventListener('click',function(){menu(!mOpen)});
+addEventListener('keydown',function(e){if(e.key==='Escape'&&mOpen)menu(false)});
+
+// Motion Prompt #093 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#093
+// Smooth scroll: in-page links glide to the section in 1.05 s (cubic ease-in-out), stopping below the fixed header;
+// a round back-to-top button fades in over 40 px once scroll passes 60 px; the menu item of the section in view is highlighted
+var hdrH=function(){return hdr.offsetHeight};
+document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var id=a.getAttribute('href');if(id.length<2)return;var t=document.querySelector(id);if(!t)return;e.preventDefault();
+  if(mOpen)menu(false);var y=id==='#top'?0:t.getBoundingClientRect().top+scrollY-hdrH()+1;gsap.to(window,{scrollTo:{y:y,autoKill:true},duration:RM?0:1.05,ease:'power2.inOut'});});});
+var totop=document.getElementById('totop');
+totop.addEventListener('click',function(){gsap.to(window,{scrollTo:{y:0,autoKill:true},duration:RM?0:1.05,ease:'power2.inOut'})});
+ScrollTrigger.create({start:0,end:'max',onUpdate:function(s){var o=clamp((s.scroll()-60)/40);totop.style.opacity=o;totop.style.pointerEvents=o>.5?'auto':'none';}});
+[['#collection','Fragrance'],['#atelier','Atelier'],['#notes','Notes']].forEach(function(p){var link=document.querySelector('header nav a[href="'+p[0]+'"]');
+  ScrollTrigger.create({trigger:p[0],start:'top 50%',end:'bottom 50%',toggleClass:{targets:link,className:'active'}});});
+
+// Motion Prompt #052 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#052
+// Accordion: the row opens over 0.35 s (easeInOutCubic) and pushes the rows below down; the answer fades in with the open amount,
+// the chevron rotates 180°, the heading changes colour
+document.querySelectorAll('.qa').forEach(function(q){var b=q.querySelector('button'),a=q.querySelector('.ans'),c=q.querySelector('.chev');
+  b.addEventListener('click',function(){var open=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',open);
+    gsap.to(a,{height:open?'auto':0,opacity:open?1:0,duration:RM?0:.35,ease:'power2.inOut',onComplete:function(){ScrollTrigger.refresh()}});
+    gsap.to(c,{rotation:open?225:45,duration:RM?0:.35,ease:'power2.inOut'});});});
+
+// Motion Prompt #158 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#158
+// Floating label: on focus or with text the label shrinks 15 → 11.5 px and moves to the top over 0.24 s (cubic ease-out); the border turns crimson over 0.15 s
+// Motion Prompt #159 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#159
+// Inline validation: while the address is half-typed the field turns red (#E5383B, fill #FFF1F1) with a message; once valid it turns green (#1E9E5A)
+// and a check bounces in with elastic.out(1, 0.3)
+var news=document.getElementById('news'),email=document.getElementById('email'),field=document.getElementById('field'),nmsg=document.getElementById('nmsg'),okc=field.querySelector('.okc'),nbtn=document.getElementById('nbtn'),wasOk=false;
+var RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function check(){var v=email.value.trim(),ok=RE.test(v);field.classList.toggle('bad',v.length>1&&!ok);field.classList.toggle('good',ok);
+  nmsg.className='nmsg'+(v.length>1?(ok?' good':' bad'):'');nmsg.textContent=v.length>1?(ok?'Looks good':'Please check the email format'):'';
+  if(ok&&!wasOk)gsap.fromTo(okc,{scale:0},{scale:1,duration:RM?0:.8,ease:'elastic.out(1,0.3)'});if(!ok&&wasOk)gsap.to(okc,{scale:0,duration:.15});wasOk=ok;return ok;}
+email.addEventListener('focus',function(){field.classList.add('focus')});email.addEventListener('blur',function(){field.classList.remove('focus')});
+email.addEventListener('input',check);
+news.addEventListener('submit',function(e){e.preventDefault();if(!check()){email.focus();field.classList.add('bad');nmsg.className='nmsg bad';nmsg.textContent='Please enter your email';return;}
+  if(nbtn.classList.contains('busy'))return;var lb=nbtn.querySelector('.roll'),old=lb.innerHTML;nbtn.classList.add('busy');
+  setTimeout(function(){nbtn.classList.remove('busy');nbtn.classList.add('done');lb.textContent='✓ Done';showToast('Thank you. This is a demo, so nothing was sent.',3.2);
+    setTimeout(function(){nbtn.classList.remove('done');lb.innerHTML=old;email.value='';check();},2200);},1300);});
+})();
+</script>
+
+</body></html>
