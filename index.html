@@ -1,6 +1,10 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%237a1027%22/%3E%3Ctext x=%2232%22 y=%2244%22 text-anchor=%22middle%22 font-family=%22Georgia%22 font-size=%2236%22 fill=%22%23f6e7e3%22%3EO%3C/text%3E%3C/svg%3E">
 <title>Orangerie N°7</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Demo boutique landing for a fictional perfume house: Figue Rose eau de parfum, hand-drawn bottle, GSAP and Motion Prompt animations.">
 <meta name="theme-color" content="#f6e7e3">
 <meta property="og:title" content="Orangerie N°7 — Figue Rose">
@@ -254,6 +258,8 @@ footer a.ln{color:rgba(251,246,242,.85);justify-self:start}
 @media (max-width:480px){.fgrid{grid-template-columns:1fr}}
 </style>
 
+</head>
+<body>
 <div id="pre" aria-hidden="true"><div class="b">ORANGERIE</div><div class="n">Figue Rose · N°7</div><div class="bar"><i id="pbar"></i></div><div class="pct" id="pct">0</div></div>
 <canvas id="grain" aria-hidden="true"></canvas>
 <div id="cur" aria-hidden="true"></div>
@@ -287,7 +293,7 @@ footer a.ln{color:rgba(251,246,242,.85);justify-self:start}
         </div>
       </div>
       <div class="stage" id="stage">
-        <div class="arch-win ctr" id="archwin"><img src="img/fig.webp" alt="" width="736" height="1307" fetchpriority="high"></div>
+        <div class="arch-win ctr" id="archwin"><img src="fig.webp" alt="" width="736" height="1307" fetchpriority="high"></div>
         <svg id="silk" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="silkA" x1="0" x2="1"><stop offset="0" stop-color="#e9a8b6" stop-opacity="0"/><stop offset=".35" stop-color="#e9a8b6" stop-opacity=".55"/><stop offset=".7" stop-color="#f6c9d3" stop-opacity=".45"/><stop offset="1" stop-color="#e9a8b6" stop-opacity="0"/></linearGradient><linearGradient id="silkB" x1="0" x2="1"><stop offset="0" stop-color="#c9667f" stop-opacity="0"/><stop offset=".5" stop-color="#d98a9c" stop-opacity=".35"/><stop offset="1" stop-color="#c9667f" stop-opacity="0"/></linearGradient></defs><path id="silk1" fill="url(#silkA)"/><path id="silk2" fill="url(#silkB)"/></svg>
         <div class="ring ctr" id="ring"></div>
         <div class="podium ctr"><svg viewBox="0 0 380 92" aria-hidden="true"><use href="#podium"/></svg></div>
@@ -309,7 +315,7 @@ footer a.ln{color:rgba(251,246,242,.85);justify-self:start}
   </div></section>
 
   <section class="zoom" id="atelier">
-    <div class="clip" id="clip"><img src="img/embroidery.webp" alt="Hand embroidery: peonies and songbirds on crimson silk" width="736" height="1104"></div>
+    <div class="clip" id="clip"><img src="embroidery.webp" alt="Hand embroidery: peonies and songbirds on crimson silk" width="736" height="1104"></div>
     <div class="label lb">The Atelier</div>
     <p class="side l">Embroidered <em>by hand</em></p>
     <p class="side r">thread by <em>thread</em></p>
@@ -321,10 +327,10 @@ footer a.ln{color:rgba(251,246,242,.85);justify-self:start}
       <div class="wrap head"><div><div class="label">The Collection</div><h2 style="margin-top:12px">Four gardens, <em>one house</em></h2></div><p class="hint" style="color:var(--mute);max-width:34ch;margin:0"><span class="h-hover">Hover a bottle to see what it is made of.</span><span class="h-touch">Swipe to browse the collection.</span></p></div>
       <div class="rail" id="rail">
         <article class="card intro"><div class="label">Eau de Parfum · 18%</div><h3 style="font-size:32px;line-height:1.15">Each fragrance is built around a single note</h3><p>Lasts eight to ten hours on skin, and longer on silk.</p></article>
-        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#f6dfe3"><img src="img/figs.webp" alt="Ripe figs" loading="lazy" width="736" height="1319"><span class="new label">New</span><i class="disc"></i><div class="mini" data-bottle="rose"></div><i class="glare"></i></div><div class="tx"><div class="label">Heart · fig</div><div class="nm">Figue Rose</div><div class="ds">Ripe fig, pink peony, fig leaf.</div><div class="pr"><span>$145 · 50 ml</span><a class="ln" href="#buy" data-kind="rose">Shop</a></div></div></article>
-        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#f5e6cc"><img src="img/honey.webp" alt="Honeycomb" loading="lazy" width="736" height="1104"><i class="disc"></i><div class="mini" data-bottle="honey"></div><i class="glare"></i></div><div class="tx"><div class="label">Base · honey</div><div class="nm">Miel Sauvage</div><div class="ds">Wild honey, beeswax, warm wood.</div><div class="pr"><span>$145 · 50 ml</span><a class="ln" href="#buy" data-kind="honey">Shop</a></div></div></article>
-        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#e3ebf2"><img src="img/lemon.webp" alt="Engraving of a lemon branch" loading="lazy" width="736" height="1280"><i class="disc"></i><div class="mini" data-bottle="citron"></div><i class="glare"></i></div><div class="tx"><div class="label">Top · lemon</div><div class="nm">Citron Bleu</div><div class="ds">Sicilian lemon and citrus blossom.</div><div class="pr"><span>$145 · 50 ml</span><a class="ln" href="#buy" data-kind="citron">Shop</a></div></div></article>
-        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#e9eed8"><img src="img/pistachio.webp" alt="Pistachios in pink shells" loading="lazy" width="600" height="900"><i class="disc"></i><div class="mini" data-bottle="pistache"></div><i class="glare"></i></div><div class="tx"><div class="label">Heart · pistachio</div><div class="nm">Pistache Rose</div><div class="ds">Roasted pistachio, pink pepper, cream.</div><div class="pr"><span>$160 · 50 ml</span><a class="ln" href="#buy" data-kind="pistache">Shop</a></div></div></article>
+        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#f6dfe3"><img src="figs.webp" alt="Ripe figs" loading="lazy" width="736" height="1319"><span class="new label">New</span><i class="disc"></i><div class="mini" data-bottle="rose"></div><i class="glare"></i></div><div class="tx"><div class="label">Heart · fig</div><div class="nm">Figue Rose</div><div class="ds">Ripe fig, pink peony, fig leaf.</div><div class="pr"><span>$145 · 50 ml</span><a class="ln" href="#buy" data-kind="rose">Shop</a></div></div></article>
+        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#f5e6cc"><img src="honey.webp" alt="Honeycomb" loading="lazy" width="736" height="1104"><i class="disc"></i><div class="mini" data-bottle="honey"></div><i class="glare"></i></div><div class="tx"><div class="label">Base · honey</div><div class="nm">Miel Sauvage</div><div class="ds">Wild honey, beeswax, warm wood.</div><div class="pr"><span>$145 · 50 ml</span><a class="ln" href="#buy" data-kind="honey">Shop</a></div></div></article>
+        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#e3ebf2"><img src="lemon.webp" alt="Engraving of a lemon branch" loading="lazy" width="736" height="1280"><i class="disc"></i><div class="mini" data-bottle="citron"></div><i class="glare"></i></div><div class="tx"><div class="label">Top · lemon</div><div class="nm">Citron Bleu</div><div class="ds">Sicilian lemon and citrus blossom.</div><div class="pr"><span>$145 · 50 ml</span><a class="ln" href="#buy" data-kind="citron">Shop</a></div></div></article>
+        <article class="card" data-tilt data-hover><div class="ph" style="--tint:#e9eed8"><img src="pistachio.webp" alt="Pistachios in pink shells" loading="lazy" width="600" height="900"><i class="disc"></i><div class="mini" data-bottle="pistache"></div><i class="glare"></i></div><div class="tx"><div class="label">Heart · pistachio</div><div class="nm">Pistache Rose</div><div class="ds">Roasted pistachio, pink pepper, cream.</div><div class="pr"><span>$160 · 50 ml</span><a class="ln" href="#buy" data-kind="pistache">Shop</a></div></div></article>
       </div>
     </div>
   </section>
@@ -671,4 +677,5 @@ news.addEventListener('submit',function(e){e.preventDefault();if(!check()){email
 })();
 </script>
 
-</body></html>
+</body>
+</html>
